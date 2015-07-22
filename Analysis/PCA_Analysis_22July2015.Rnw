@@ -1,0 +1,411 @@
+\documentclass{article}
+\usepackage{mathpazo}
+\renewcommand{\sfdefault}{lmss}
+\renewcommand{\ttdefault}{lmtt}
+\usepackage[T1]{fontenc}
+\usepackage[a4paper,left=2cm,right=4cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{verbatim}
+\usepackage{cite}
+
+\usepackage{xspace,amsmath}
+\newcommand{\um}{\ensuremath{\mu \text{m}}\xspace}
+\usepackage{url}
+\usepackage[authoryear]{natbib}
+\newcommand{\dynamic}{(Dynamic)}
+\newcommand{\static}{(Static)}
+\newcommand{\hdfgroup}[1]{\texttt{#1}}
+
+\begin{document}
+
+\onehalfspacing
+\title{ Exploring Ontogeny Analysis }
+
+\author{D Hall}
+\date{\today}
+
+\maketitle
+
+
+
+
+<<load, eval=TRUE,echo=FALSE, message=FALSE>>=
+
+#set global options
+suppressWarnings( library(FactoMineR) )
+suppressWarnings( library(knitr) )
+options(formatR.arrow=TRUE,width=50)
+opts_chunk$set(fig.path='figure/graphics-', cache.path='cache/graphics-', 
+               fig.align='center', fig.width=5, fig.height=5,
+               warning=FALSE,
+               fig.show='hold', cache=F, par=TRUE)
+knit_hooks$set(par=function(before, options, envir){
+if (before && options$fig.show!='none') par(mar=c(4,4,.1,.1),cex.lab=.95,
+                                            cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)
+}, crop=hook_pdfcrop)
+
+suppressWarnings(library("lattice", character.only=T  ) )
+suppressWarnings(library("ggplot2", character.only=T  ) )
+suppressWarnings(library( "reshape2", character.only=T   )  )
+suppressWarnings(library("latticeExtra", character.only=T  ) )
+suppressWarnings( library("MASS", character.only=T  ) )
+suppressWarnings( library("gridExtra", character.only=T  ) )
+suppressWarnings( library("gtable", character.only=T  ) )
+suppressWarnings( library("xtable", character.only=T  ) )
+suppressWarnings( library("FactoMineR", character.only=T ) )
+suppressWarnings(library(leaps) )
+suppressWarnings( library(randomForest) )
+suppressWarnings( library(e1071) )
+suppressWarnings( library(scatterplot3d) )
+suppressWarnings(library(Hmisc) )
+suppressWarnings( library(RColorBrewer) )
+
+mac=(Sys.info()[1]=="Darwin")
+if (mac){
+  drive.letter<-"/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/"
+  num.cores<-8
+} else{
+  drive.letter<-'C:/Users/diana_000/Dropbox/HistoricOntogenyAnalysis/'
+  num.cores<-1 ##INPUT number of cores here
+}
+data.dir<-paste(drive.letter, 'EPAmeadev/', sep="")
+
+setwd(drive.letter)
+source("Analysis/classification_functions/classification_functions.R" )
+
+
+@
+
+
+
+<<whats-in-data1,message=FALSE, eval=T, include=F, echo=F, cache=T>>=
+
+# data files
+data.file<-paste(data.dir,"data_all_wellLevel_July13.RData", sep="") # data.all
+data.merged.file<-paste(data.dir,"date_all_merged_July13.RData", sep="") #called total
+
+load( data.file )
+load (data.merged.file ) #total is name of df
+
+# rename for consistency
+names(total)[which(names(total)=="plate")]="Plate.SN"
+names(total)[which(names(total)=="div")]="DIV"
+df = total
+df$DIV<-as.numeric(substring(df$DIV,4,5))
+df$ddp<-paste( df$date, df$DIV, df$Plate.SN, sep="_" )
+df$dwp<-paste( df$date, df$well, df$Plate.SN, sep="_" )
+
+# add data labels
+names(df)[names(df)=='0.05']="tiling0.05"
+
+vars.want<-c(  "file.name",
+                "date" ,               
+                "Plate.SN",
+                "DIV", 
+                "well",
+                "fir.rate", 
+                "bursty",
+                "bursts.per.min", 
+                "ns.n", 
+                "cv.IBIs",  
+                "mean.freq", 
+                "mean.dur",
+                "tiling0.05", 
+                "durn.m", 
+                "per.spikes.in.burst",
+                "peak.m",
+                "cv.ISIs",
+                "ddp",
+                "dwp")
+
+df<-df[,is.element(names(df), vars.want)]
+vars.labels<-c( 
+                file.name="file.name",
+                date="date" ,               
+                Plate.SN="Plate.SN",
+                DIV="DIV", 
+                well="well",
+                fir.rate="firing rate (hz)", 
+                bursty="% electrodes >= 1 burst per minute",
+                bursts.per.min="burst rate (min)", 
+                ns.n="# network spikes", 
+                cv.IBIs="coef. variation of IBI",  
+                mean.freq="within burst firing rate", 
+                mean.dur="burst durtion (s)",
+                tiling0.05="tiling coefficient", 
+                durn.m="network spike duration (s)", 
+                per.spikes.in.burst="% spikes in burst",
+                peak.m="# electrodes at peak of network spikes",
+                cv.ISIs="coef. of variation of ISI in burst",
+                ddp ="date-div-plate"  ,
+                dwp ="date-well-plate" )
+
+
+label(df) = lapply(names( vars.labels ), 
+                     function(x) label(df[,x]) = vars.labels[x])
+
+
+
+
+# first a little summary about number of plates
+num.plates<-length(unique(paste( df$date, df$Plate.SN, sep="_" )))
+print(paste("There are ", num.plates," plates total." ,sep=""))
+
+print("Number of plates by DIV")
+a<-table(paste( df$date,  df$Plate.SN, sep="_" ) , df$DIV)
+colSums(a)
+
+
+
+colors.div<-c("#fec44f", "#fe9929","#d95f0e","#993404")
+
+
+@
+
+\section*{PCA}
+PCA was performed on different subsets of the data: all the data, a subset of variable most useful in linear regression on DIV, and a subset including only firing rate, cv of IBI and no. network spikes. Plots are shown below. 
+
+<<pca1,warning=FALSE,include=T, eval=T,echo=F>>=
+redundant.vars<-c("file.name",
+                "date" ,               
+                "Plate.SN",
+                "DIV", 
+                "well", "ddp", "dwp")
+vars.want.quant<-setdiff(vars.want, redundant.vars )
+
+  ###########
+  # data prep
+  index.want<-which(is.element( names(df),c("ddp", vars.want.quant)) )
+  df.sub1<-df[ ,index.want ]
+  plate.df.all<-aggregate(df.sub1, by=list(df.sub1$ddp), median, na.rm=T)
+  plate.df.all<-plate.df.all[,-length(plate.df.all[1,]) ]# remove ddp
+  
+
+#well level color indicators
+if (mac) quartz() else options(device="windows")
+par( mfrow=c(2,1) )
+col.ind = rep(colors.div[1], length(df[, 1])) # 1="black"
+ind.5 <- which(df$DIV ==5)
+ind.7 <- which(df$DIV ==7)
+ind.9 <- which(df$DIV ==9)
+ind.12 <- which(df$DIV ==12)
+col.ind[ind.7]<-colors.div[2]#4 blue
+col.ind[ ind.9 ]<-colors.div[3] #3 = "green"
+col.ind[ ind.12 ]<-colors.div[4] #2 = "red"
+
+
+
+
+
+###plate level color indicators
+col.ind.plate<-unlist(lapply(strsplit(plate.df.all[,1],spli="_"), function(x) x[2]) )
+col.ind2 = rep(colors.div[1], length(col.ind.plate)) # 1="black"
+ind.5 <- which(col.ind.plate =="5")
+ind.7 <- which(col.ind.plate =="7")
+ind.9 <- which(col.ind.plate =="9")
+ind.12 <- which(col.ind.plate =="12")
+col.ind2[ind.7]<-colors.div[2] #4 blue
+col.ind2[ ind.9 ]<-colors.div[3] #3 = "green"
+col.ind2[ ind.12 ]<-colors.div[4] #2 = "red"
+
+
+
+
+  
+  
+  # PCA
+  bs.pca.all<-PCA(df[,vars.want.quant], scale.unit = TRUE, ncp = 5, graph = F )
+  bs.plate.all<-PCA(plate.df.all[,-1], scale.unit = TRUE, ncp = 5, graph = F)
+ 
+  
+  par(mfrow=c(2,2))
+  plot(bs.pca.all, axes = c(1, 2), choix = "ind", new.plot = T, 
+     xlim=c(min(bs.pca.all$ind$coord[,1]), max(bs.pca.all$ind$coord[,1])), 
+     ylim=c(-3,3), title="Well Level",
+        cex = .5, label = "none", col.ind = col.ind  )
+  #title("All 11 variables")
+  #legend("topleft", legend=c("DIV5", "DIV7", "DIV9", "DIV12"),fill = unique(col.ind), cex=.8 )
+  
+  # scree
+  plot(x=seq(1,length(bs.pca.all$eig[3][,1])), y=bs.pca.all$eig[3][,1], type="o",
+     xlab="# PCs", ylab="% variation explained")
+  
+  ##
+  # all plate level
+
+  plot(bs.plate.all, axes = c(1, 2), choix = "ind", new.plot = T, title="Plate Level",
+     #xlim=c(min(bs.pca.all$ind$coord[,1]), max(bs.pca.all$ind$coord[,1])) , 
+     #ylim=c(.9*min(bs.pca.all$ind$coord[,2]), max(bs.pca.all$ind$coord[,2])*.9), 
+        cex = 2, label = "none", col.ind = col.ind2 )
+  #legend("topleft", legend=c("DIV 5", "DIV 7", "DIV 9", "DIV12"),fill = unique(col.ind2), cex=.6 )
+  # scree
+  plot(x=seq(1,length(bs.plate.all$eig[3][,1])), y=bs.plate.all$eig[3][,1], type="o",
+     xlab="# PCs", ylab="% variation explained")
+
+#######  ========= table code
+  # to make table
+#sort(bs.pca.all$var$coord[,1], decreasing=T)
+#sort(bs.plate.all$var$coord[,1], decreasing=T)
+
+
+@
+
+<<pca2,warning=FALSE,include=F, eval=T,echo=F>>=
+  
+  
+
+### ----------------------individual plots
+   save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Analysis//well_level_duo.pdf"
+  pdf( save.path)
+ par(mfrow=c(1,2))
+  plot(bs.pca.all, axes = c(1, 2), choix = "ind", new.plot = T, 
+     xlim=c(min(bs.pca.all$ind$coord[,1]), max(bs.pca.all$ind$coord[,1])), 
+     ylim=c(-3,3), title="Well Level",
+        cex = .5, label = "none", col.ind = col.ind  )
+  #title("All 11 variables")
+  #legend("topleft", legend=c("DIV5", "DIV7", "DIV9", "DIV12"),fill = unique(col.ind), cex=.8 )
+  
+  # scree
+  plot(x=seq(1,length(bs.pca.all$eig[3][,1])), y=bs.pca.all$eig[3][,1], type="o",
+     xlab="# PCs", ylab="% variation explained")
+  dev.off()
+  ##
+  # all plate level
+  save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Analysis//plate_level_duo.pdf"
+  pdf( save.path)
+  plot(bs.plate.all, axes = c(1, 2), choix = "ind", new.plot = T, title="Plate Level",
+     #xlim=c(min(bs.pca.all$ind$coord[,1]), max(bs.pca.all$ind$coord[,1])) , 
+     #ylim=c(.9*min(bs.pca.all$ind$coord[,2]), max(bs.pca.all$ind$coord[,2])*.9), 
+        cex = 2, label = "none", col.ind = col.ind2 )
+  #legend("topleft", legend=c("DIV 5", "DIV 7", "DIV 9", "DIV12"),fill = unique(col.ind2), cex=.6 )
+  # scree
+  plot(x=seq(1,length(bs.plate.all$eig[3][,1])), y=bs.plate.all$eig[3][,1], type="o",
+     xlab="# PCs", ylab="% variation explained")
+
+  dev.off()
+  
+  
+  
+  
+  
+  save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Analysis//well_level.pdf"
+  pdf( save.path)
+  
+  plot(bs.pca.all, axes = c(1, 2), choix = "ind", new.plot = T, 
+     xlim=c(min(bs.pca.all$ind$coord[,1]), max(bs.pca.all$ind$coord[,1])), 
+     ylim=c(-3,3), title="Well Level",
+        cex = .5, label = "none", col.ind = col.ind  )
+  #title("All variables")
+  legend("topleft", legend=c("DIV5", "DIV7", "DIV9", "DIV12"),fill = unique(col.ind), cex=.8 )
+  
+  # scree
+  plot(x=seq(1,length(bs.pca.all$eig[3][,1])), y=bs.pca.all$eig[3][,1], type="o",
+     xlab="# PCs", ylab="% variation explained")
+  
+  dev.off()
+  
+  save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Analysis//plate_level.pdf"
+  pdf( save.path)
+  
+   plot(bs.plate.all, axes = c(1, 2), choix = "ind", new.plot = T, title="Plate Level",
+     #xlim=c(min(bs.pca.all$ind$coord[,1]), max(bs.pca.all$ind$coord[,1])) , 
+     #ylim=c(.9*min(bs.pca.all$ind$coord[,2]), max(bs.pca.all$ind$coord[,2])*.9), 
+        cex = 2, label = "none", col.ind = col.ind2 )
+  legend("topleft", legend=c("DIV 5", "DIV 7", "DIV 9", "DIV12"),fill = unique(col.ind2), cex=.6 )
+  # scree
+  plot(x=seq(1,length(bs.plate.all$eig[3][,1])), y=bs.plate.all$eig[3][,1], type="o",
+     xlab="# PCs", ylab="% variation explained")
+  
+  dev.off()
+
+  
+  
+  #all 4 in one panel
+  save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Analysis//4_in_1.pdf"
+  pdf( save.path)
+  par(mfrow=c(2,2))
+  plot(bs.pca.all, axes = c(1, 2), choix = "ind", new.plot = T, 
+     xlim=c(min(bs.pca.all$ind$coord[,1]), max(bs.pca.all$ind$coord[,1])), 
+     ylim=c(-3,3), title="Well Level",
+        cex = .5, label = "none", col.ind = col.ind  )
+  #title("All 11 variables")
+  legend("topleft", legend=c("DIV5", "DIV7", "DIV9", "DIV12"),fill = unique(col.ind), cex=.8 )
+  
+  # scree
+
+  plot(x=seq(1,length(bs.pca.all$eig[3][,1])), y=bs.pca.all$eig[3][,1], type="o",
+     xlab="# PCs", ylab="% variation explained")
+  
+  ##
+  # all plate level
+
+  plot(bs.plate.all, axes = c(1, 2), choix = "ind", new.plot = T, title="Plate Level",
+     #xlim=c(min(bs.pca.all$ind$coord[,1]), max(bs.pca.all$ind$coord[,1])) , 
+     #ylim=c(.9*min(bs.pca.all$ind$coord[,2]), max(bs.pca.all$ind$coord[,2])*.9), 
+        cex = 2, label = "none", col.ind = col.ind2 )
+  legend("topleft", legend=c("DIV 5", "DIV 7", "DIV 9", "DIV12"),fill = unique(col.ind2), cex=.6 )
+  # scree
+  plot(x=seq(1,length(bs.plate.all$eig[3][,1])), y=bs.plate.all$eig[3][,1], type="o",
+     xlab="# PCs", ylab="% variation explained")
+
+  
+  dev.off()
+  
+@
+
+
+\begin{table}[ht]
+\begin{tabular}{r | r | r}
+  \hline
+variable & PC 1 coordinate & PC 2 coordinate \\ 
+  \hline
+  within burst firing & 0.92 & -0.16 \\ 
+  firing rate hz & 0.92 & -0.12 \\ 
+  bursts rate min & 0.90 & -0.06 \\ 
+  no. bursting electrodes, 1 per min   & 0.90 & 0.27 \\ 
+  ns rate & 0.81 & -0.05 \\ 
+  percent spikes in bursts & 0.78 & 0.13 \\ 
+  cv of ISI in burst & 0.73 & 0.19 \\ 
+  cv of IBI & 0.51 & -0.41 \\
+  burst duration & 0.48 & -.39 \\
+  no. electrodes in peak ns  & 0.28 & 0.90 \\ 
+  ns duration & 0.27 &.89  \\
+  correlation & 0 & -.11 \\
+   \hline
+\end{tabular}
+\caption{ The table displays the variable loadings of the well level PCA with all variables.  Roughly speaking, the first PC dimension represents an increase in bursting rate and network spikes, while the second PC dimension represents the network level behavior. }
+\label{tab:Loading variables well level PCA} 
+\end{table}
+
+
+\begin{table}[ht]
+\begin{tabular}{r | r | r}
+  \hline
+variable & PC 1 coordinate & PC 2 coordinate \\ 
+  \hline
+  no. bursting electrodes, 1 per min & 0.96 & 0.01 \\ 
+  firing rate hz & 0.95 & -0.14 \\ 
+  firing rate in burst & 0.93 & -0.18 \\ 
+  burst rate & 0.93 & -0.05\\ 
+  cv of ISI in burst & 0.92 & 0.05 \\ 
+  ns rate & 0.91 & -0.13 \\ 
+  \% spikes in burst & 0.86 & 0.08 \\ 
+  correlation  & 0.84 & 0.04 \\
+  cv of IBI & 0.65 & -.5 \\
+  \# elects at peak  & 0.57 & 0.79 \\ 
+  ns duration & 0.56 &.77  \\
+  burst duration & 0.52 & -.47 \\
+   \hline
+\end{tabular}
+\caption{The  table is the loadings of the PCA created with all variables at plate level. 
+Similar to the PCA at the well level, the first PC dimension is synonimous with activity rate while
+the second PC dimension is responsible for  network features and some bursting regularity.}
+\label{tab:Loading variables plate level PCA} 
+\end{table}
+
+
+
+
+
+\end{document}
