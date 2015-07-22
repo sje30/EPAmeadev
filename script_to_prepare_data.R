@@ -16,29 +16,27 @@ library(sjemea)
 library(parallel)
 
 #set switches
-mac=T
+mac=(Sys.info()[1]=="Darwin")
 
 ##The available number of cores
-num.cores<-1 ##INPUT number of cores here
-  
 ##The directory in which the HDF5 files are stored
-
-
-  ##INPUT data directory here, in the form "/Users/Ellese/PhD/EPA/Data/"
+##INPUT data directory here, in the form "/Users/Ellese/PhD/EPA/Data/"
 if (mac){
-  functions.file<-"/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/PreparedData/functions_prepared_data.R" 
-  mea.data.dir<-"/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Data/forStephenEglen/"
-} else {
-  drive.letter<-'C:/Users/diana_000/Dropbox'
-  mea.data.dir <- paste(drive.letter,
-                        '/HistoricOntogenyAnalysis/Data/forStephenEglen/',
-                        sep="")
-  functions.file<-paste(drive.letter,
-                        "/HistoricOntogenyAnalysis/PreparedData/",
-                        "functions_prepared_data.R",
-                        sep="")
-  
+  drive.letter<-"/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/EPAmeadev/"
+  num.cores<-8
+} else{
+  drive.letter<-'C:/Users/diana_000/Dropbox/HistoricOntogenyAnalysis/EPAmeadev/'
+  num.cores<-1 ##INPUT number of cores here
 }
+
+
+setwd( drive.letter)
+functions.file<-paste(drive.letter,
+                      "functions_prepared_data.R",
+                      sep="")
+mea.data.dir<-paste(drive.letter,
+                    "allH5Files",
+                    sep="" )
 source( functions.file )
 
 #Sets global variables
@@ -91,14 +89,8 @@ if (want.create.data){
     s.list[[i]]<-temp
   }
 } else{
-  if (mac){
-    data.slist<-"/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/PreparedData/s_list_3-2-15.RData"
-    load(data.slist)
-  } else {
-    load(paste(drive.letter,
-               "/HistoricOntogenyAnalysis/PreparedData/s_list_3-2-15.RData",
-               sep="") )
-  }
+  data.slist<-"s_list_3-2-15.RData"
+  load(data.slist) #data is saved as "s.list"
   
 }
 
@@ -119,12 +111,13 @@ total<-merge(total, data.all[[4]], by=c("file.name","date", "plate","div","durat
 total<-merge(total, data.all[[5]], by=c("file.name","date", "plate","div","duration","well") )
 # sort all data by total
 total<-total[with(total, order(file.name, div, well)),]
-#Saves data in data_all.RData
-if (mac){
-  save(data.all, file="/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/PreparedData/data_all_wellLevel.RData")  
-  save(total, file="/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/PreparedData/date_all_merged.RData")  
-} else {
-  save(data.all, file="data_all_diana.RData")
-}
+
+
+#Saves data in data_all.RDatar
+save(data.all, file=paste0(drive.letter ,
+                          "data_all_wellLevel_July13.RData")  )
+save(total, file=paste0(drive.letter,
+                        "date_all_merged_July13.RData")  )
+
 
 

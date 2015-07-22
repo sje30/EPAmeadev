@@ -188,7 +188,7 @@ sum.by.well<-function(b){
   
   b$well<-substring( as.character(b$channels),1,2)
   b2<-aggregate(list(b), by=list(b$well), FUN=mean, na.rm=TRUE )
-  b2=b2[ ,c(1,3:20)]
+  b2=b2[ ,c(1,3:21)]
   names(b2)[1]<-"well"
   b2
 }
@@ -198,14 +198,65 @@ sum.by.well<-function(b){
 burst.analysis <- function(s.list) {
   #names a allb for each plate, a list with entry for each channel
   b.list<-mclapply(s.list , function(x) spikes.to.bursts(x, "mi"), mc.cores=num.cores)
+  
   for (j in 1:length(s.list) ) {
     s.list[[j]]$allb <- b.list[[j]]
   }
-  bsum.list<-lapply(s.list, calc.burst.summary)
+  
+  #bsum.list<-lapply(s.list, calc.burst.summary) #added in cv.ISIs
+  #b.list<-mclapply(s.list , function(x) spikes.to.bursts(x, "mi"), mc.cores=num.cores)
+  b.list<-lapply(s.list, calc.burst.summary.2 )
+  #bsum.list<-lapply(s.list, calc.burst.summary.2 ) 
   # don't sum by well
+  #bsum.list<-lapply(bsum.list, sum.by.well )
   bsum.list<-lapply(bsum.list, sum.by.well )
 
   bsum.list
+}
+
+
+# calc.burst.summary but with extra CV.isis
+calc.burst.summary.2<-function(s, bursty.threshold = 1){
+  allb <- s$allb
+  channels <- s$channels
+  spikes <- as.vector(s$nspikes)
+  duration <- s$rec.time[2] - s$rec.time[1]
+  mean.freq <- round(spikes/duration, 3)
+  nbursts <- sapply(allb, num.bursts)
+  bursts.per.sec <- round(nbursts/duration, 3)
+  bursts.per.min <- bursts.per.sec * 60
+  bursty = ifelse(bursts.per.min >= bursty.threshold, 1, 0)
+  durations <- burstinfo(allb, "durn")
+  mean.dur <- round(sapply(durations, mean), 3)
+  sd.dur <- round(sapply(durations, sd), 3)
+  ISIs = calc.all.isi(s, allb)
+  mean.ISIs = sapply(ISIs, mean)
+  sd.ISIs = unlist(sapply(ISIs, sd, na.rm = TRUE))
+  cv.ISIs = sd.ISIs/mean.ISIs
+  ns <- burstinfo(allb, "len")
+  mean.spikes <- round(sapply(ns, mean), 3)
+  sd.spikes <- round(sapply(ns, sd), 3)
+  total.spikes.in.burst <- sapply(ns, sum)
+  per.spikes.in.burst <- round(100 * (total.spikes.in.burst/spikes), 
+                               3)
+  si <- burstinfo(allb, "SI")
+  mean.si <- round(sapply(si, mean), 3)
+  IBIs <- calc.all.ibi(s, allb)
+  mean.IBIs <- sapply(IBIs, mean)
+  sd.IBIs <- sapply(IBIs, sd, na.rm = TRUE)
+  cv.IBIs <- round(sd.IBIs/mean.IBIs, 3)
+  mean.IBIs <- round(mean.IBIs, 3)
+  sd.IBIs <- round(sd.IBIs, 3)
+  df <- data.frame(channels = channels, spikes = spikes, mean.freq = mean.freq, 
+                   nbursts = nbursts, bursts.per.sec = bursts.per.sec, bursts.per.min = bursts.per.min, 
+                   bursty = bursty, mean.dur = mean.dur, sd.dur = sd.dur, 
+                   mean.spikes = mean.spikes, sd.spikes = sd.spikes, per.spikes.in.burst = per.spikes.in.burst, 
+                   per.spikes.out.burst = round(100 - per.spikes.in.burst, 
+                                                3), 
+                   mean.si = mean.si, mean.isis = mean.ISIs, sd.mean.isis = sd.ISIs, 
+                   cv.ISIs = cv.ISIs,
+                   mean.IBIs = mean.IBIs, sd.IBIs = sd.IBIs, cv.IBIs = cv.IBIs)
+  df
 }
 
 #Calculates median bursts per minute, burst duration, percent of spikes in bursts and 
