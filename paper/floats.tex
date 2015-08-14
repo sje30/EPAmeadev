@@ -23,7 +23,7 @@
 \begin{figure}
   \centering
   \fbox{\includegraphics[width=170mm]{rasters.pdf}}
-  \caption{Example raster plot from one well over the four DIV
+  \caption{Example raster plots from the same well over the four DIV
 studied. Each row represents the spike train from one electrode. The
 scale bar for all raster plots is 60s.}
 \end{figure}
@@ -31,7 +31,8 @@ scale bar for all raster plots is 60s.}
 \begin{figure}
   \centering
   \fbox{\includegraphics[width=170mm]{firingrate.pdf}}
-  \caption{A Firing rate, and B within burst firing rate.}
+  \caption{A Firing rate, and B within burst firing rate.  Box plots
+    showing median and Interquartle Range are shown for n=16 plates.}
 \end{figure}
 
 \begin{figure}
@@ -76,9 +77,15 @@ well averaging reduces variability.
 \end{figure}
 
 \begin{figure}
-	\centering
-	\fbox{\includegraphics[width=170mm]{accuracy.pdf}}
-	\caption{Accuracy of predicting the age of each plate using $n \leq 48$ wells on each plate. Dark blue line shows the mean accuracy, while the vertical lines show the minimum and maximum accuracy over 100 trials with random choices of wells.}
+  \centering
+  \fbox{\includegraphics[width=170mm]{accuracy.pdf}}
+  \caption{Accuracy of predicting the age of each plate using $n
+    \leq 48$ wells on each plate. Dark blue line shows the mean
+    accuracy, while the vertical lines show the minimum and
+    maximum accuracy over 100 trials with random choices of
+    wells.  For $n=48$, the error bars indicate the variability
+    in classification due to the partioning of data into
+    train/test sets.  (Chance = 25\%) }
 \end{figure}
 
 \begin{table}
