@@ -82,83 +82,55 @@ source("Analysis/classification_functions/classification_functions.R" )
 <<whats-in-data1,message=FALSE, eval=T, include=F, echo=F, cache=T>>=
 
 # data files
-data.file<-paste(data.dir,"data_all_wellLevel_July13.RData", sep="") # data.all
-data.merged.file<-paste(data.dir,"date_all_merged_July13.RData", sep="") #called total
+data.file<-paste(data.dir,"data_wellwise_14Aug.RData", sep="") # data.all
 
-load( data.file )
-load (data.merged.file ) #total is name of df
+load( data.file ) #data.all
+
+# "Firing.rate"             
+# "Within.burst.firing.rate"
+# "Bursting.electrodes"     
+# "Burst.rate"              
+# "Burst.duration"          
+# "Spikes.in.bursts"        
+# "CV.of.IBI"               
+# "CV.of.within.burst.ISI"  
+# "Network.spike.rate"      
+# "Network.spike.peak"      
+# "Network.spike.duration"  
+# "Correlation"             
+# "Well"                    
+# "Plate.id"                
+# "DIV"
+df = data.all
 
 # rename for consistency
-names(total)[which(names(total)=="plate")]="Plate.SN"
-names(total)[which(names(total)=="div")]="DIV"
-df = total
-df$DIV<-as.numeric(substring(df$DIV,4,5))
-df$ddp<-paste( df$date, df$DIV, df$Plate.SN, sep="_" )
-df$dwp<-paste( df$date, df$well, df$Plate.SN, sep="_" )
+names(df)[which(names(df)=="Plate.id")]="Plate.SN"
+df$pd<-paste(df$Plate.SN, df$DIV, sep="_")
 
-# add data labels
-names(df)[names(df)=='0.05']="tiling0.05"
-
-vars.want<-c(  "file.name",
-                "date" ,               
-                "Plate.SN",
-                "DIV", 
-                "well",
-                "fir.rate", 
-                "bursty",
-                "bursts.per.min", 
-                "ns.n", 
-                "cv.IBIs",  
-                "mean.freq", 
-                "mean.dur",
-                "tiling0.05", 
-                "durn.m", 
-                "per.spikes.in.burst",
-                "peak.m",
-                "cv.ISIs",
-                "ddp",
-                "dwp")
+vars.want<-c(   "Plate.SN",
+                "DIV",
+                "pd",
+                "Well",
+                "Firing.rate", #  "fir.rate", 
+                "Bursting.electrodes",    # "bursty",
+                "Burst.rate", #   "bursts.per.min", 
+                "Network.spike.rate",     # "ns.n", 
+                "CV.of.IBI",    # "cv.IBIs",  
+                "Within.burst.firing.rate" ,   # "mean.freq", 
+                "Burst.duration", #   "mean.dur",
+                "Correlation",   # "tiling0.05", 
+                "Network.spike.duration",    # "durn.m", 
+                "Spikes.in.bursts", #
+                "Network.spike.peak", #
+                "CV.of.within.burst.ISI" )
 
 df<-df[,is.element(names(df), vars.want)]
-vars.labels<-c( 
-                file.name="file.name",
-                date="date" ,               
-                Plate.SN="Plate.SN",
-                DIV="DIV", 
-                well="well",
-                fir.rate="firing rate (hz)", 
-                bursty="% electrodes >= 1 burst per minute",
-                bursts.per.min="burst rate (min)", 
-                ns.n="# network spikes", 
-                cv.IBIs="coef. variation of IBI",  
-                mean.freq="within burst firing rate", 
-                mean.dur="burst durtion (s)",
-                tiling0.05="tiling coefficient", 
-                durn.m="network spike duration (s)", 
-                per.spikes.in.burst="% spikes in burst",
-                peak.m="# electrodes at peak of network spikes",
-                cv.ISIs="coef. of variation of ISI in burst",
-                ddp ="date-div-plate"  ,
-                dwp ="date-well-plate" )
-
-
-label(df) = lapply(names( vars.labels ), 
-                     function(x) label(df[,x]) = vars.labels[x])
+df[which(is.na(df), arr.ind=T)]<-0
 
 
 
 
-# first a little summary about number of plates
-num.plates<-length(unique(paste( df$date, df$Plate.SN, sep="_" )))
-print(paste("There are ", num.plates," plates total." ,sep=""))
-
-print("Number of plates by DIV")
-a<-table(paste( df$date,  df$Plate.SN, sep="_" ) , df$DIV)
-colSums(a)
-
-
-
-colors.div<-c("#fec44f", "#fe9929","#d95f0e","#993404")
+colors.div<-c('#E19995' , '#4FBE9B' , '#6EB3D9', '#D098D7')
 
 
 @
@@ -167,20 +139,21 @@ colors.div<-c("#fec44f", "#fe9929","#d95f0e","#993404")
 PCA was performed on different subsets of the data: all the data, a subset of variable most useful in linear regression on DIV, and a subset including only firing rate, cv of IBI and no. network spikes. Plots are shown below. 
 
 <<pca1,warning=FALSE,include=T, eval=T,echo=F>>=
-redundant.vars<-c("file.name",
-                "date" ,               
-                "Plate.SN",
+redundant.vars<-c("Plate.SN",          
                 "DIV", 
-                "well", "ddp", "dwp")
+                "Well",
+                "pd")
 vars.want.quant<-setdiff(vars.want, redundant.vars )
 
   ###########
   # data prep
-  index.want<-which(is.element( names(df),c("ddp", vars.want.quant)) )
+  index.want<-which(is.element( names(df), vars.want.quant) )
   df.sub1<-df[ ,index.want ]
-  plate.df.all<-aggregate(df.sub1, by=list(df.sub1$ddp), median, na.rm=T)
-  plate.df.all<-plate.df.all[,-length(plate.df.all[1,]) ]# remove ddp
-  
+
+     plate.df.all<-aggregate(df.sub1, 
+                          by=list( as.factor( df$pd ) ),
+                          median, na.rm=T)
+
 
 #well level color indicators
 if (mac) quartz() else options(device="windows")
@@ -199,7 +172,8 @@ col.ind[ ind.12 ]<-colors.div[4] #2 = "red"
 
 
 ###plate level color indicators
-col.ind.plate<-unlist(lapply(strsplit(plate.df.all[,1],spli="_"), function(x) x[2]) )
+col.ind.plate<-unlist(lapply(strsplit(as.character( plate.df.all[,1] ), split="_"), 
+                             function(x) x[4])) 
 col.ind2 = rep(colors.div[1], length(col.ind.plate)) # 1="black"
 ind.5 <- which(col.ind.plate =="5")
 ind.7 <- which(col.ind.plate =="7")
@@ -213,9 +187,10 @@ col.ind2[ ind.12 ]<-colors.div[4] #2 = "red"
 
 
   
-  
+  vars.want.quant<-names(df)[1:11]
   # PCA
-  bs.pca.all<-PCA(df[,vars.want.quant], scale.unit = TRUE, ncp = 5, graph = F )
+  
+  bs.pca.all<-PCA( df[,vars.want.quant], scale.unit = TRUE, ncp = 5, graph = F )
   bs.plate.all<-PCA(plate.df.all[,-1], scale.unit = TRUE, ncp = 5, graph = F)
  
   
@@ -235,8 +210,6 @@ col.ind2[ ind.12 ]<-colors.div[4] #2 = "red"
   # all plate level
 
   plot(bs.plate.all, axes = c(1, 2), choix = "ind", new.plot = T, title="Plate Level",
-     #xlim=c(min(bs.pca.all$ind$coord[,1]), max(bs.pca.all$ind$coord[,1])) , 
-     #ylim=c(.9*min(bs.pca.all$ind$coord[,2]), max(bs.pca.all$ind$coord[,2])*.9), 
         cex = 2, label = "none", col.ind = col.ind2 )
   #legend("topleft", legend=c("DIV 5", "DIV 7", "DIV 9", "DIV12"),fill = unique(col.ind2), cex=.6 )
   # scree
@@ -355,6 +328,14 @@ col.ind2[ ind.12 ]<-colors.div[4] #2 = "red"
 @
 
 
+
+
+<<pca-tables,warning=FALSE,include=F, eval=F,echo=F>>=
+  
+# out of date tables
+  
+if (FALSE){
+
 \begin{table}[ht]
 \begin{tabular}{r | r | r}
   \hline
@@ -404,8 +385,8 @@ the second PC dimension is responsible for  network features and some bursting r
 \label{tab:Loading variables plate level PCA} 
 \end{table}
 
-
-
+}
+@
 
 
 \end{document}
