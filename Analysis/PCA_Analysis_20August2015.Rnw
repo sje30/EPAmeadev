@@ -229,7 +229,7 @@ col.ind2[ ind.12 ]<-colors.div[4] #2 = "red"
   
 
 ### ----------------------individual plots
-   save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Analysis//well_level_duo.pdf"
+   save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Analysis/well_level_duo.pdf"
   pdf( save.path)
  par(mfrow=c(1,2))
   plot(bs.pca.all, axes = c(1, 2), choix = "ind", new.plot = T, 
@@ -245,7 +245,7 @@ col.ind2[ ind.12 ]<-colors.div[4] #2 = "red"
   dev.off()
   ##
   # all plate level
-  save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Analysis//plate_level_duo.pdf"
+  save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Analysis/plate_level_duo.pdf"
   pdf( save.path)
   plot(bs.plate.all, axes = c(1, 2), choix = "ind", new.plot = T, title="Plate Level",
      #xlim=c(min(bs.pca.all$ind$coord[,1]), max(bs.pca.all$ind$coord[,1])) , 
@@ -262,7 +262,7 @@ col.ind2[ ind.12 ]<-colors.div[4] #2 = "red"
   
   
   
-  save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Analysis//well_level.pdf"
+  save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Analysis/well_level.pdf"
   pdf( save.path)
   
   plot(bs.pca.all, axes = c(1, 2), choix = "ind", new.plot = T, 
@@ -270,7 +270,7 @@ col.ind2[ ind.12 ]<-colors.div[4] #2 = "red"
      ylim=c(-3,3), title="Well Level",
         cex = .5, label = "none", col.ind = col.ind  )
   #title("All variables")
-  legend("topleft", legend=c("DIV5", "DIV7", "DIV9", "DIV12"),fill = unique(col.ind), cex=.8 )
+  legend("topleft", legend=c("DIV5", "DIV7", "DIV9", "DIV12"),fill = colors.div, cex=.8 )
   
   # scree
   plot(x=seq(1,length(bs.pca.all$eig[3][,1])), y=bs.pca.all$eig[3][,1], type="o",
@@ -278,14 +278,15 @@ col.ind2[ ind.12 ]<-colors.div[4] #2 = "red"
   
   dev.off()
   
-  save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Analysis//plate_level.pdf"
+  save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Analysis/plate_level.pdf"
   pdf( save.path)
   
    plot(bs.plate.all, axes = c(1, 2), choix = "ind", new.plot = T, title="Plate Level",
      #xlim=c(min(bs.pca.all$ind$coord[,1]), max(bs.pca.all$ind$coord[,1])) , 
      #ylim=c(.9*min(bs.pca.all$ind$coord[,2]), max(bs.pca.all$ind$coord[,2])*.9), 
         cex = 2, label = "none", col.ind = col.ind2 )
-  legend("topleft", legend=c("DIV 5", "DIV 7", "DIV 9", "DIV12"),fill = unique(col.ind2), cex=.6 )
+  legend("topleft", legend=c("DIV 5", "DIV 7", "DIV 9", "DIV12"),
+         fill =colors.div, cex=.6 )
   # scree
   plot(x=seq(1,length(bs.plate.all$eig[3][,1])), y=bs.plate.all$eig[3][,1], type="o",
      xlab="# PCs", ylab="% variation explained")
@@ -295,7 +296,7 @@ col.ind2[ ind.12 ]<-colors.div[4] #2 = "red"
   
   
   #all 4 in one panel
-  save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Analysis//4_in_1.pdf"
+  save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/Analysis/4_in_1.pdf"
   pdf( save.path)
   par(mfrow=c(2,2))
   plot(bs.pca.all, axes = c(1, 2), choix = "ind", new.plot = T, 
@@ -303,7 +304,7 @@ col.ind2[ ind.12 ]<-colors.div[4] #2 = "red"
      ylim=c(-3,3), title="Well Level",
         cex = .5, label = "none", col.ind = col.ind  )
   #title("All 11 variables")
-  legend("topleft", legend=c("DIV5", "DIV7", "DIV9", "DIV12"),fill = unique(col.ind), cex=.8 )
+  legend("topleft", legend=c("DIV5", "DIV7", "DIV9", "DIV12"),fill = colors.div, cex=.8 )
   
   # scree
 
@@ -317,7 +318,7 @@ col.ind2[ ind.12 ]<-colors.div[4] #2 = "red"
      #xlim=c(min(bs.pca.all$ind$coord[,1]), max(bs.pca.all$ind$coord[,1])) , 
      #ylim=c(.9*min(bs.pca.all$ind$coord[,2]), max(bs.pca.all$ind$coord[,2])*.9), 
         cex = 2, label = "none", col.ind = col.ind2 )
-  legend("topleft", legend=c("DIV 5", "DIV 7", "DIV 9", "DIV12"),fill = unique(col.ind2), cex=.6 )
+  legend("topleft", legend=c("DIV 5", "DIV 7", "DIV 9", "DIV12"),fill = colors.div, cex=.6 )
   # scree
   plot(x=seq(1,length(bs.plate.all$eig[3][,1])), y=bs.plate.all$eig[3][,1], type="o",
      xlab="# PCs", ylab="% variation explained")
