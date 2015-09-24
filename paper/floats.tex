@@ -42,8 +42,8 @@
   \fbox{\includegraphics[width=170mm]{bursts.pdf}}
   \caption{Bursting properties of spontaneous activity mature with
     development.  Each panel shows box plots of one burst feature
-    across development. A: Fraction of bursting electrodes. B: bursts
-    per minute.  C: burst duration.  D: percentage of spikes in
+    across development. A: Bursts
+    per minute. B: Burst duration. C: Fraction of bursting electrodes. D: Percentage of spikes in
     bursts.  E: Coefficient of variation (CV) of interburst interval
     (IBI).  F: CV of within burst interspike interval (ISI).}
 \end{figure}
@@ -52,8 +52,8 @@
   \centering
   \fbox{\includegraphics[width=170mm]{ns.pdf}}
   \caption{Network properties of spontaneous activity assessed
-    across development.  A: Network spike rate.  B: network spike
-    peak.  C: network spike duration. D: mean pairwise correlation.}
+    across development.  A: Network spike rate.  B: Network spike
+    duration.  C: Network spike peak. D: Mean pairwise correlation.}
 \end{figure}
 
 \begin{figure}
@@ -63,12 +63,12 @@
   \caption{[Top left] Well-level PCA projection of 12-dimensional
 feature vectors onto PC dimension 1 (x-axis) and 2 (y-axis).  Each dot
 represents a well, colored by day in vitro (DIV) of recording. Rough
-ordering from youngest (lightest, DIV 5) to oldest (darkest, DIV 12)
-wells is apparent in darkening of colors along the positive direction
+ordering from youngest (red, DIV 5) to oldest (purple, DIV 12)
+wells is apparent in change of colors along the positive direction
 . (Top right) Scree plot displays \% variance explained by the number
 of PC dimensions. [Bottom left] Plate-level PCA projection of plate
 averages onto PC dimension 1 (x-axis) and 2 (y-axis).  As in top,
-rough ordering of observations by DIV is apparent in the light to dark
+rough ordering of observations by DIV is apparent in the red to purple
 transition along the x-axis. (Bottom right) Scree plot of plate-level
 PCA. Compared to the well-level PCA scree plot, a larger amount of
 variation is captured in the first two PC dimensions indicating that
@@ -86,7 +86,7 @@ well averaging reduces variability.
 \begin{figure}
   \centering
   \fbox{\includegraphics[width=170mm]{accuracy.pdf}}
-  \caption{Accuracy of predicting the age of each plate by samploing
+  \caption{Accuracy of predicting the age of each well by sampling
     $n \leq 48$ wells on each plate. Dark blue line shows the mean
     accuracy, while the vertical lines show the minimum and maximum
     accuracy over 100 trials with random choices of wells.  For
@@ -103,18 +103,18 @@ well averaging reduces variability.
   		\hline
   		Feature & Description
   		\\ \hline 
-  		Firing rate & The mean firing rate on each electrode was calculated. The well value was the median value of all active electrodes.
-  		\\ Within burst firing rate & Bursts were detected using an implementation of the MaxInterval method by Neuroexplorer (Nex Technologies, 2012), with the following threshold parameters: maximum ISI $0.25\,$s, maximum beginning ISI $0.1\,$s, minimum ISI $0.8\,$s, minimum burst duration $0.05\,$s and minimum number of spikes in a burst of 6. The electrode value was the mean firing rate within all bursts on the electrode. The well value was the median  value from all electrodes that exhibited bursting behaviour.
-  		\\ Fraction of bursting electrodes & An electrode was classified as bursting if the burst rate on the electrode was at least one per minute. The well value was the number of electrodes classified as bursting as a fraction of the total number of active electrodes on the well. 
-  		\\ Burst rate & The number of bursts per minute on an electrode was calculated. The well value was the median value from all electrodes that exhibited bursting behaviour. 
-  		\\ Burst duration  & The mean duration of all bursts on an electrode over the recording period was calculated. The well value was the median value from all electrodes that exhibited bursting behaviour. 
-  		\\ Percentage of spikes in bursts & The number of spikes on an electrode classified as being within bursts divided by the total number of spikes on the electrode. The well value was the median value from all electrodes that exhibited bursting behaviour. 
-  		\\ CV of IBI & The ratio of the standard deviation to the mean of the length of all interburst intervals on an electrode. The well value was the median value from all electrodes that exhibited bursting behaviour. 
-  		\\ CV of within burst ISIs &  The ratio of the standard deviation to the mean of the length of all interspike intervals within bursts on an electrode. The well value was the median value from all electrodes that exhibited bursting behaviour. 
-  		\\ Network spike rate & The recording period was divided into 3ms bins, and the number of electrodes on a well that fired at least one spike during each bin was counted. A network spike was defined as a period in which the number of active electrodes exceeded the threshold value of 5. The well value was the number of network spikes on the well per minute of the recording period.
-  		\\ Network spike peak & The maximum number of active electrodes during each network spike. The well value was taken as the median peak value of all network spikes on the well during the recording period.
-  		\\ Network spike duration & The duration of a network spike was defined as the length of time during which the  number of active electrodes on the well exceeded the threshold value. The well value was taken as the median duration of all network spikes on the well during the recording period.
-  		\\ Mean correlation & The correlation between every pairwise combination of electrodes on a well was calculated using the spike time tiling coefficient (Cutts \& Eglen, 2015) with $\Delta t = 50ms$. The well value was the mean of the pairwise correlations between all distinct electrodes on the well.
+  		Mean firing Rate & The mean firing rate (MFR) on each electrode was calculated. The well value was the median value of all active electrodes. 
+  		\\ Burst rate  & The number of bursts per minute on an electrode was calculated. The well value was the median value from all electrodes that exhibited bursting behaviour. 
+  		\\ Burst duration  & The mean duration of all bursts on an electrode over the recording period was calculated. The well value was the median value from all electrodes that exhibited bursting behaviour.
+  		\\ Fraction of bursting electrodes  & An electrode was classified as bursting if the burst rate on the electrode was at least one per minute. The well value was the number of electrodes classified as bursting as a fraction of the total number of active electrodes on the well.  
+  		\\ Within burst firing rate   & The electrode value was the mean firing rate within all bursts on the electrode. The well value was the median value from all electrodes that exhibited bursting behaviour. 
+  		\\ Percentage of spikes in bursts & The number of spikes on an electrode classified as being within bursts divided by the total number of spikes on the electrode. The well value was the median value from all electrodes that exhibited bursting behaviour.  
+  		\\ CV of IBI & The ratio of the standard deviation to the mean of the length of all inter-burst intervals (IBI) on an electrode. The well value was the median value from all electrodes that exhibited bursting behaviour.  
+  		\\ CV of within burst ISIs &  The ratio of the standard deviation to the mean of the length of all inter-spike intervals (ISI) within bursts on an electrode. The well value was the median value from all electrodes that exhibited bursting behaviour.  
+  		\\ Network spike rate &  The well value was the number of network spikes on the well per minute of the recording period (See Methods section for definition of a Network Spike).
+  		\\ Network spike duration  & The duration of a network spike was defined as the length of time during which the number of active electrodes on the well exceeded the threshold value (5). The well value was taken as the median duration of all network spikes on the well during the recording period.
+  		\\ Network spike peak  & The maximum number of active electrodes during each network spike. The well value was taken as the median peak value of all network spikes on the well during the recording period. 
+  		\\ Mean correlation & The correlation between every pairwise combination of electrodes on a well was calculated using the spike time tiling coefficient (Cutts \& Eglen, 2015) with $\Delta t = 50ms$. The well value was the mean of the pairwise correlations between all distinct electrodes on the well. 
   		\\ \hline
   	\end{tabular}
   \caption{Features used in our analysis and a brief description of how
