@@ -23,31 +23,37 @@
 \begin{figure}
   \centering
   \fbox{\includegraphics[width=170mm]{rasters.pdf}}
-  \caption{Example raster plots from the same well over the four DIV
-studied. Each row represents the spike train from one electrode. The
-scale bar for all raster plots is 60s.}
+  \caption{Example raster plots from the same well over the four
+    developmental ages (days in vitro, DIV) studied. Each row
+    represents the spike train from one electrode. The scale bar for
+    all raster plots is 60s.}
 \end{figure}
 
 \begin{figure}
   \centering
   \fbox{\includegraphics[width=170mm]{firingrate.pdf}}
-  \caption{A Firing rate, and B within burst firing rate.  Box plots
-    showing median and Interquartle Range are shown for n=16 plates.}
+  \caption{Mean firing rate (A) and within burst firing rate (B)
+    increase with development.  Box plots showing median and
+    interquartle range are shown for n=16 plates.}
 \end{figure}
 
 \begin{figure}
   \centering
   \fbox{\includegraphics[width=170mm]{bursts.pdf}}
-  \caption{A Fraction of bursting electrodes, B bursts per minute, C
-burst duration, D percentage of spikes in bursts, E CV of IBI, and F
-CV of within burst ISI.}
+  \caption{Bursting properties of spontaneous activity mature with
+    development.  Each panel shows box plots of one burst feature
+    across development. A: Fraction of bursting electrodes. B: bursts
+    per minute.  C: burst duration.  D: percentage of spikes in
+    bursts.  E: Coefficient of variation (CV) of interburst interval
+    (IBI).  F: CV of within burst interspike interval (ISI).}
 \end{figure}
 
 \begin{figure}
   \centering
   \fbox{\includegraphics[width=170mm]{ns.pdf}}
-  \caption{A Network spike rate, B network spike peak, C network spike
-duration, and D mean correlation.}
+  \caption{Network properties of spontaneous activity assessed
+    across development.  A: Network spike rate.  B: network spike
+    peak.  C: network spike duration. D: mean pairwise correlation.}
 \end{figure}
 
 \begin{figure}
@@ -79,13 +85,14 @@ well averaging reduces variability.
 \begin{figure}
   \centering
   \fbox{\includegraphics[width=170mm]{accuracy.pdf}}
-  \caption{Accuracy of predicting the age of each plate using $n
-    \leq 48$ wells on each plate. Dark blue line shows the mean
-    accuracy, while the vertical lines show the minimum and
-    maximum accuracy over 100 trials with random choices of
-    wells.  For $n=48$, the error bars indicate the variability
-    in classification due to the partioning of data into
-    train/test sets.  (Chance = 25\%) }
+  \caption{Accuracy of predicting the age of each plate by samploing
+    $n \leq 48$ wells on each plate. Dark blue line shows the mean
+    accuracy, while the vertical lines show the minimum and maximum
+    accuracy over 100 trials with random choices of wells.  For
+    $n=48$, the error bars indicate the small variability in
+    classification due to the partioning of data into train/test sets.
+    The red dotted line indicates baseline level of performance (25\%)
+    for a classifier.}
 \end{figure}
 
 \begin{table}
@@ -118,7 +125,7 @@ well averaging reduces variability.
   \rowcolors{2}{white}{gray!25}
   \begin{tabular}{|l|c|}
   	\hline
-  	\textbf{Feature removed} & \textbf{Accuracy}
+  	\textbf{Feature} & \textbf{Accuracy \%}
   	\\ \hline 
   	CV of within burst ISI & 49.1
   	\\CV of IBI & 58.2
@@ -134,10 +141,12 @@ well averaging reduces variability.
   	\\Network spike peak & 73.0
   	\\ \hline
   \end{tabular}
-  \caption{Classifier performance at predicting the age of
+  \caption {Classifier performance at predicting the age of
 arrays. Features are listed in decreasing order of importance, and the
-value in each row n=1,...,12 is the mean percentage of correct
-classifications using the top n features.}
+value in each row $n=1 \ldots 12$ is the mean percentage of correct
+classifications using the top $n$ features.  For example, row 4 shows
+that the classifier was 65.0\% accurate at predicting age using the
+top four features. }
 \end{table}
 
 \begin{table}
@@ -145,7 +154,7 @@ classifications using the top n features.}
   \rowcolors{2}{gray!25}{white}
   \begin{tabular}{|l|c|c|c|c|c|c|}
 	  \hline
-	  \textbf{Feature removed} & \multicolumn{5}{c}{\textbf{Accuracy}} & 
+	  \textbf{Feature} & \multicolumn{5}{c}{\textbf{Accuracy \%}} & 
 	  \\ \hline
 	  & 5 vs 7 & 5 vs 9 & 5 vs 12 & 7 vs 9 & 7 vs 12 & 9 vs 12
 	  \\ \hline 
@@ -164,10 +173,10 @@ classifications using the top n features.}
 	\\ \hline
 \end{tabular}
   \caption{Classifier performance at predicting the age of arrays for
-    each pairwise combination of DIV. Features are listed in
+    each pairwise combination of ages (days in vitro). Features are listed in
     decreasing order of importance, and the value in each row
-    n=1,...,12 is the mean percentage of correct classifications using
-    the top n features.}
+    $n=1 \ldots 12$ is the mean percentage of correct classifications using
+    the top $n$ features.}
 \end{table}
 
 
