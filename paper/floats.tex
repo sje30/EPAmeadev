@@ -34,7 +34,7 @@
   \fbox{\includegraphics[width=170mm]{firingrate.pdf}}
   \caption{Mean firing rate (A) and within burst firing rate (B)
     increase with development.  Box plots showing median and
-    interquartle range are shown for n=16 plates.}
+    interquartle range are shown for n=16 plates.Stars represent significant difference in median values between pairs of consecutive ages at the 0.05 (*) or 0.01 (**) level. P-values obtained from a Mann-Whitney test, corrected for multiple comparisons using the false discovery rate method.}
 \end{figure}
 
 \begin{figure}
@@ -45,7 +45,7 @@
     across development. A: Bursts
     per minute. B: Burst duration. C: Fraction of bursting electrodes. D: Percentage of spikes in
     bursts.  E: Coefficient of variation (CV) of interburst interval
-    (IBI).  F: CV of within burst interspike interval (ISI).}
+    (IBI).  F: CV of within burst interspike interval (ISI).Stars represent significant difference in median values between pairs of consecutive ages at the 0.05 (*) or 0.01 (**) level. P-values obtained from a Mann-Whitney test, corrected for multiple comparisons using the false discovery rate method.}
 \end{figure}
 
 \begin{figure}
@@ -53,7 +53,7 @@
   \fbox{\includegraphics[width=170mm]{ns.pdf}}
   \caption{Network properties of spontaneous activity assessed
     across development.  A: Network spike rate.  B: Network spike
-    duration.  C: Network spike peak. D: Mean pairwise correlation.}
+    duration.  C: Network spike peak. D: Mean pairwise correlation. Stars represent significant difference in median values between pairs of consecutive ages at the 0.05 (*) or 0.01 (**) level. P-values obtained from a Mann-Whitney test, corrected for multiple comparisons using the false discovery rate method.}
 \end{figure}
 
 \begin{figure}
@@ -114,7 +114,7 @@ well averaging reduces variability.
   		\\ Network spike rate &  The well value was the number of network spikes on the well per minute of the recording period (See Methods section for definition of a Network Spike).
   		\\ Network spike duration  & The duration of a network spike was defined as the length of time during which the number of active electrodes on the well exceeded the threshold value (5). The well value was taken as the median duration of all network spikes on the well during the recording period.
   		\\ Network spike peak  & The maximum number of active electrodes during each network spike. The well value was taken as the median peak value of all network spikes on the well during the recording period. 
-  		\\ Mean correlation & The correlation between every pairwise combination of electrodes on a well was calculated using the spike time tiling coefficient (Cutts \& Eglen, 2015) with $\Delta t = 50ms$. The well value was the mean of the pairwise correlations between all distinct electrodes on the well. 
+  		\\ Mean correlation & The correlation between every pairwise combination of electrodes on a well was calculated using the spike time tiling coefficient (Cutts \& Eglen, 2015) with $\Delta t = 50ms$. (See Methods section for definition). The well value was the mean of the pairwise correlations between all distinct electrodes on the well. 
   		\\ \hline
   	\end{tabular}
   \caption{Features used in our analysis and a brief description of how
@@ -128,18 +128,18 @@ well averaging reduces variability.
   	\hline
   	\textbf{Feature} & \textbf{Accuracy \%}
   	\\ \hline 
-  	CV of within burst ISI & 49.1
-  	\\CV of IBI & 58.2
-  	\\ Network spike rate& 62.7
+  	CV of within burst ISI & 49.2
+  	\\CV of IBI & 58.3
+  	\\ Network spike rate& 62.0
   	\\ Burst rate & 65.0
-  	\\ Burst duration& 66.1
-  	\\ \% Spikes in bursts & 68.7
-  	\\Correlation & 69.6
-  	\\Firing rate & 71.3
-  	\\Within burst firing rate & 72.6
-  	\\Bursting electrodes & 72.8
-  	\\ Network spike duration & 73.4
-  	\\Network spike peak & 73.0
+  	\\ Burst duration& 66.0
+  	\\ \% Spikes in bursts & 68.3
+  	\\Correlation & 69.5
+  	\\Firing rate & 71.4
+  	\\Within burst firing rate & 72.7
+  	\\Bursting electrodes & 73.0
+  	\\ Network spike duration & 73.5
+  	\\Network spike peak & 73.4
   	\\ \hline
   \end{tabular}
   \caption {Classifier performance at predicting the age of
@@ -159,18 +159,18 @@ top four features. }
 	  \\ \hline
 	  & 5 vs 7 & 5 vs 9 & 5 vs 12 & 7 vs 9 & 7 vs 12 & 9 vs 12
 	  \\ \hline 
-		CV of within burst ISI & 75.1 & 87.4 & 88.9 & 70.1 & 78.3 & 57.2
-		\\ CV of IBI & 77.4 & 89.6 & 93.8 & 77.2 & 85.3 & 65.1
-		\\ Network spike rate& 79.6 & 90.4 & 95.4  & 79.6 & 88.0 & 69.1
-		\\ Burst rate & 79.3 & 90.3 & 95.2 & 80.9 & 88.5 & 72.6
-		\\ Burst duration& 80.2 & 90.7 & 95.3 & 81.1 & 88.7 & 73.9
-		\\ \% Spikes in bursts & 81.7 & 91.1 & 95.7 & 81.6 & 90.4 & 76.7
-		\\ Correlation & 82.3 & 92.1 & 95.7 & 82.3 & 91.1 & 77.2
-		\\ Firing rate & 82.3 & 91.9 & 95.6 & 81.9 & 90.9 & 80.6
-		\\ Within burst firing rate & 83.8 & 92.8 & 96.3 & 82.5 & 91.7 & 81.2
-		\\ Bursting electrodes & 83.6 & 92.5 & 96.3 & 82.6 & 91.9 & 81.6
-		\\ Network spike duration & 83.9 & 92.8 & 97.0 & 83.0 & 92.6 & 81.7
-		\\ Network spike peak & 83.5 & 92.5 & 96.8 & 82.9 & 92.9 & 82.1
+		CV of within burst ISI & 75.0 & 87.5 & 91.8 & 69.9& 78.1 & 57.4
+		\\ CV of IBI & 77.4 & 89.5 & 93.6 & 76.8 & 85.5 & 64.7
+		\\ Network spike rate& 79.3 & 90.3 & 95.5  & 79.6 & 88.0 & 68.7
+		\\ Burst rate & 79.3 & 90.3 & 95.3 & 81.0 & 88.4 & 72.8
+		\\ Burst duration& 79.7 & 90.8 & 95.3 & 81.0 & 88.6 & 74.0
+		\\ \% Spikes in bursts & 81.6 & 91.3 & 95.6 & 81.5 & 90.4 & 76.4
+		\\ Correlation & 82.2 & 92.1 & 95.6 & 82.3 & 90.9 & 77.1
+		\\ Firing rate & 82.3 & 91.7 & 95.7 & 82.3 & 90.9 & 80.2
+		\\ Within burst firing rate & 84.2 & 92.7 & 96.2 & 82.4 & 91.3 & 81.2
+		\\ Bursting electrodes & 83.6 & 92.5 & 96.2 & 82.6 & 91.8 & 81.5
+		\\ Network spike duration & 83.7 & 92.9 & 96.8 & 82.9 & 92.8 & 82.0
+		\\ Network spike peak & 82.2 & 92.5 & 96.8 & 82.6 & 93.0 & 82.1
 	\\ \hline
 \end{tabular}
   \caption{Classifier performance at predicting the age of arrays for
