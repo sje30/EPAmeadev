@@ -336,6 +336,27 @@ col.ind2[ ind.12 ]<-colors.div[4] #2 = "red"
   linear.well<-lm(bs.pca.all$ind$coord[,1]~df$DIV)
   summary(linear.well)
   
+  
+  
+  par(cex=.5, mar=c(4,4,5,2) )
+  plot(y=bs.pca.all$ind$coord[,1], x=df$DIV,
+       ylab="PC1", xlab="DIV", col=col.ind, cex.lab=1.3, cex.axis=1.4)
+  abline(linear.well)
+  title(paste("PC dimension 1 regressed on DIV",
+              "Slope Coefficeint sig.( P<0.001 )",sep="\n") )
+  
+  save.path= "/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/EPAmeadev/paper/PC1_x_DIV.pdf"
+  pdf( save.path)
+  
+  par(cex=.5, mar=c(5,5,5,2) )
+  plot(y=bs.pca.all$ind$coord[,1], x=df$DIV,
+       ylab="PC1", xlab="DIV", col=col.ind, cex.lab=1.3, cex.axis=1.4)
+  abline(linear.well)
+  title(paste("PC dimension 1 regressed on DIV",
+              "Slope Coefficeint sig.( P<0.001 ) ",sep="\n"),col.sub=1.3)
+  
+  dev.off()
+  
 @
 
 
