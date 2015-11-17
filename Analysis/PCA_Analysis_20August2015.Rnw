@@ -78,6 +78,34 @@ source("Analysis/classification_functions/classification_functions.R" )
 @
 
 
+<<look-at-data-before-filtering,message=FALSE, eval=T, include=F, echo=F, cache=T>>=
+
+data.all<-"/Users/dh2744/Dropbox/HistoricOntogenyAnalysis/EPAmeadev/s_list_3-2-15.RData"
+load(data.all) #s.list
+div<-sapply(s.list, function(x){ unlist(strsplit(basename( x$file ), split="_"))[4]})
+table(div)
+ind<-which(div=="DIV07"); sub<-s.list[ind];  
+temp<-lapply(sub, function(x) {
+  t2<-aggregate(x$meanfiringrate, by=list(substr(x$channels,1,2)  ), mean, na.rm=T )
+  cbind.data.frame( t2,
+         date=rep(unlist(strsplit(basename(x$file),split="_"))[2],sep="_" ,length(t2[,1]) ) ,
+         plate=rep(unlist(strsplit(basename(x$file),split="_"))[3],sep="_" ,length(t2[,1]) ) ,
+         stringsAsFactors=F
+  )
+  }
+  )
+
+all<-do.call(rbind, temp)
+
+
+color<-rep("black", length(all[,1]))
+color[which(all$date=="20130918")]="red"
+plot(all$x, col=color)
+abline(h=median(all[which(all$date=="20130918"),"x"] ) ) #1.22
+abline(h=median(all[which(all$date!="20130918"),"x"] ) ) #0.57
+sd(all[which(all$date!="20130918"),"x"] ) #0.33
+@
+
 
 <<whats-in-data1,message=FALSE, eval=T, include=F, echo=F, cache=T>>=
 
