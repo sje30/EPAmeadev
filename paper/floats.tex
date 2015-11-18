@@ -52,7 +52,7 @@
 \renewcommand{\sfdefault}{lmss}
 \renewcommand{\ttdefault}{lmtt}
 \usepackage[T1]{fontenc}
-\usepackage[a4paper,left=2cm,right=4cm,top=2cm,bottom=2cm]{geometry}
+%\usepackage[a4paper,left=2cm,right=4cm,top=2cm,bottom=2cm]{geometry}
 \usepackage{setspace}
 \usepackage{listings}
 \usepackage{verbatim}
@@ -128,7 +128,7 @@
 \begin{figure}
   \centering
   %%\fbox{\includegraphics{temp.png}}
-  \fbox{\includegraphics{../Analysis/4_in_1.pdf}}
+  \fbox{\includegraphics[width=170mm]{../Analysis/4_in_1.pdf}}
   \caption{[Top left] Well-level PCA projection of 12-dimensional
 feature vectors onto PC dimension 1 (x-axis) and 2 (y-axis).  Each dot
 represents a well, colored by day in vitro (DIV) of recording. Rough
@@ -148,8 +148,8 @@ well averaging reduces variability.
 
 \begin{figure}
   \centering
-  \fbox{\includegraphics{PC1_x_DIV.pdf}}
-  \caption{ Scatter plot of projection of well level data onto first principle component (PC1) colored by DIV. Black line shows PC1 regressed on DIV, with slope coefficient p-value<0.001. PC1 increases significantly with increasing age of culture indicating. 
+  \fbox{\includegraphics[width=120mm]{PC1_x_DIV.pdf}}
+  \caption{ Scatter plot of projection of well level data onto first principle component (PC1), colored by DIV. Black line shows PC1 regressed on DIV, with slope coefficient p-value<0.001. PC1 increases significantly with increasing age of culture indicating. 
 }
 \end{figure}
 
