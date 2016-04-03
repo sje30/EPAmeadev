@@ -24,7 +24,7 @@ The data files for this project are stored in
 [allH5Files](allH5Files/).  They are stored in the HDF5 format as
 outlined in our
 [2014 paper](http://dx.doi.org/10.1186/2047-217X-3-3).  Our
-[analysis package, sjemea]() can read in these files as follows:
+[analysis package, sjemea](http://github.com/sje30/sjemea) can read in these files as follows:
 
 ```{r}
 library(sjemea)
