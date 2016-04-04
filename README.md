@@ -39,6 +39,19 @@ documented.  The new fields include:
 2. `/treatment` any manipulation performed to a well (all "control" in
    this study).
 
+## Analysis code
+
+Our analysis was done in R, using mostly standard packages.  See the
+files in [analysis_code](analysis_code) for details.  You will need to
+change the file
+[analysis_code/well_analysis.R](analysis_code/well_analysis.R) so that
+the following variable points to the correct location of the data:
+
+```{r}
+mea.data.dir <- "~/EPAmeadev/tree/master/allH5Files"
+```
+
+
 ## TODO
 
 1. Upload rest of analysis code
