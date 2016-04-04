@@ -54,7 +54,6 @@ mea.data.dir <- "~/EPAmeadev/tree/master/allH5Files"
 
 ## TODO
 
-1. Upload rest of analysis code
-2. Push to zenodo
+1. Push to zenodo when ready.
 
 
