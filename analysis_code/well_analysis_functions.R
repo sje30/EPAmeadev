@@ -260,6 +260,16 @@ df.names<-function(type) {
 }
 
 
+#Extracts plate ID from file name
+plate.id<-function(file.name) {
+    str_beg=max(gregexpr("/", file.name)[[1]])+1
+    str_end=max(gregexpr("_D", file.name)[[1]])-1
+    substr(file.name, start=str_beg, stop=str_end)
+}
+
+
+
+
 
 
 
