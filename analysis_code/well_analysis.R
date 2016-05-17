@@ -18,7 +18,7 @@ library(ggplot2)
 num.cores<-4
 
 ##Change this to the directory in which the HDF5 files are stored
-mea.data.dir <- "~/EPAmeadev/tree/master/allH5Files"
+mea.data.dir <- "../allH5Files"
 
 source("well_analysis_functions.R")
 
