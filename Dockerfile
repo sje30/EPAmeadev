@@ -3,12 +3,16 @@ MAINTAINER Stephen Eglen <sje30@cam.ac.uk>
 RUN apt-get update
 
 
-ENV PROJ /home/rstudio/epameadev
+ENV PROJ /home/rstudio/epameadev1
 RUN mkdir $PROJ
-RUN git clone https://github.com/sje30/EPAmeadev.git $PROJ
+##RUN git clone https://github.com/sje30/EPAmeadev.git $PROJ
 
 WORKDIR $PROJ
-RUN ls -R
+RUN wget https://github.com/sje30/EPAmeadev/archive/master.zip
+RUN unzip master.zip
+
+
+
 ##RUN Rscript installs.R
 
 
