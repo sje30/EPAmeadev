@@ -1,6 +1,6 @@
 ## install steps for this code.
 
-install.packages(c("doBy", "ggplot2", "gridExtra", "xtable"))
+install.packages(c("doBy", "ggplot2", "gridExtra"))
 install.packages(c("pracma", "randomForest", "e1071"))
 
 
