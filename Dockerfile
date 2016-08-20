@@ -8,7 +8,7 @@ RUN mkdir $PROJ
 RUN git clone https://github.com/sje30/EPAmeadev.git $PROJ
 
 WORKDIR $PROJ
-RUN Rscript installs.R
+##RUN Rscript installs.R
 
 
 WORKDIR $PROJ/analysis_code
