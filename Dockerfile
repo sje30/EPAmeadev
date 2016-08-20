@@ -9,7 +9,7 @@ RUN mkdir $PROJ
 
 WORKDIR $PROJ
 RUN wget https://github.com/sje30/EPAmeadev/archive/master.zip
-RUN unzip master.zip
+##RUN unzip master.zip
 
 
 
