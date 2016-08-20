@@ -4,8 +4,9 @@ library(grid)
 library(gridExtra)
 library(ggplot2)
 
-## Load in the data file.
-load("../data_wellwise_14Aug.RData")
+## Load in the data file.  This datafile comes from ./well_analysis.R
+load("data_wellwise.RData")
+##load("../data_wellwise_14Aug.RData")
 
 plate.vals<-summaryBy(.~Plate.id+DIV, data = data.all, FUN = function(x) { m = median(x, na.rm=TRUE)}) 
 names(plate.vals)<-c("plate.num", names(data.all)[c(15, 1:12)])
