@@ -52,4 +52,3 @@ names(data.all.wells)<-types
 data.all<-cbind(data.all.wells[[3]][,c(1:2)], data.all.wells[[1]][,c(5,1:4,6)], data.all.wells[[2]][,1:3], data.all.wells[[4]][, c(1, 4,6,7)])
 names(data.all)<-c("Firing.rate", "Within.burst.firing.rate", "Bursting.electrodes", "Burst.rate", "Burst.duration", "Spikes.in.bursts", "CV.of.IBI", "CV.of.within.burst.ISI", "Network.spike.rate", "Network.spike.peak", "Network.spike.duration", "Correlation", "Well", "Plate.id", "DIV" )
 save(data.all, file="data_wellwise.RData")
-
