@@ -1,5 +1,5 @@
 #Performs well-wise data analysis
-#R CMD BATCH well_analysis_code.R
+#R CMD BATCH well_analysis.R
 
 #Performs 5 types of analysis on hdf5 files, and outputs pdf plots:
 # 1. "burst" - burst analysis
