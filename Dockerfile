@@ -7,7 +7,7 @@ ENV PROJ /home/rstudio/EPAmeadev
 RUN mkdir $PROJ
 RUN git clone https://github.com/sje30/EPAmeadev.git $PROJ
 
-WORKDIR $PROJ/
+WORKDIR $PROJ
 RUN Rscript installs.R
 
 
