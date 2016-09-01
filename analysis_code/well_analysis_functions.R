@@ -234,9 +234,9 @@ per.well.ns<-function(s, ns.T, ns.N) {
   plateinfo <- plateinfo(s$layout$array)
   wells <- plateinfo$wells
   names(wells) <- wells
-  ns.all<-mclapply(wells, function(well) {
+  ns.all<-lapply(wells, function(well) {
     compute.ns(s, ns.T=ns.T, ns.N=ns.N, whichcells=well)
-  }, mc.cores=num.cores)
+  })
   ns.sum<-sapply(ns.all, function(x) rbind(x$brief))
   ns.mat<-as.matrix(ns.sum)
   ns.mat[1,which(is.na(ns.mat[1,]))]<-0
