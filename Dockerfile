@@ -8,9 +8,9 @@ RUN mkdir $PROJ
 RUN git clone https://github.com/sje30/EPAmeadev.git $PROJ
 
 WORKDIR $PROJ
-##RUN wget https://github.com/sje30/EPAmeadev/archive/master.zip
-##RUN unzip master.zip
-
+RUN wget https://github.com/sje30/EPAmeadev/archive/master.zip
+RUN unzip master.zip
+RUN rm master.zip
 
 RUN ls
 # RUN Rscript installs.R
