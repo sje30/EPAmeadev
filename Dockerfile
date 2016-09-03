@@ -12,8 +12,8 @@ WORKDIR $PROJ
 ##RUN unzip master.zip
 
 
-
-RUN Rscript installs.R
+RUN ls
+# RUN Rscript installs.R
 
 
 WORKDIR $PROJ/analysis_code
