@@ -57,3 +57,9 @@ mea.data.dir <- "~/EPAmeadev/tree/master/allH5Files"
 1. Push to zenodo when ready.
 
 
+## Docker
+
+work in progress.
+[![](https://images.microbadger.com/badges/image/sje30/epameadev.svg)](https://microbadger.com/images/sje30/epameadev "Get  
+your  
+own image badge on microbadger.com")
